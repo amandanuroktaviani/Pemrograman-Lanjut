@@ -1,52 +1,157 @@
-# Prerequisites
-*.d
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAXQUEUE 50
+#define MAXSTACK 8       
+char queue_name[MAXQUEUE][14];
+char queue_complain[MAXQUEUE][100];
+char stack[MAXQUEUE][100];
+int rear = - 1;
+int front = - 1;
+int top = -1;
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+main()
+{
+    int choice;
+    while (1)
+    {
+    	system("cls");
+    	printf("Proglan Furniture\n");
+    	printf("========================\n");
+        printf("1. Tambahkan Komplain Pelanggan\n");
+        printf("2. Eksekusi Komplain \n");
+        printf("3. Lihat semua komplain \n");
+        printf("------------------------\n");
+        printf("4. Masukkan barang ke gudang\n");
+        printf("5. Keluarkan barang dari gudang\n");
+        printf("6. Lihat isi stack\n");
+        printf("------------------------\n");
+        printf("99. Keluar \n");
+        printf("------------------------\n");
+        printf("Masukkan pilihan Anda : ");
+        scanf("%d", &choice);
+        switch (choice){
+            case 1:
+            	system("cls");
+				insert();
+				break;
+            case 2:
+            	system("cls");
+				delete();
+				break;
+            case 3:
+            	system("cls");
+				display();
+				break;
+			case 4:
+				system("cls");
+				addingStack();
+				break;
+			case 5:
+				system("cls");
+				popStack();
+				break;
+			case 6:
+				system("cls");
+				viewStack();
+				break;
+            case 99:
+            	system("cls");
+				exit(0);
+				break;
+            default:
+				printf("Pilihan Salah \n");
+        }
+        getch();
+    }
+}
 
-# Linker output
-*.ilk
-*.map
-*.exp
+insert(){
+    char add_name[14];
+	char add_complain[100];
+    if (rear == MAXQUEUE - 1)
+		printf("Jumlah antrian komplain penuh \n");
+    else {
+        if (front == - 1)
+        /*If queue is initially empty */
+        front = 0;
+        rear = rear + 1;
+        printf("Masukkan Nama Pelanggan : ");
+        scanf(" %[^\t\n]s",&add_name);
+        strcpy(queue_name[rear],add_name);
+        
+        printf("Masukkan Komplain Pelanggan : ");
+		scanf(" %[^\t\n]s",&add_complain); 
+        strcpy(queue_complain[rear],add_complain);
+        return 0;
+    }
+}
+ 
+delete(){
+    if (front == - 1 || front > rear){
+        printf("Semua komplain sudah di tangani \n");
+        return ;
+    } else {
+        printf("Eksekusi Komplain :\n %s => %s \n", queue_name[front],queue_complain[front]);
+        front = front + 1;
+    }
+}
 
-# Precompiled Headers
-*.gch
-*.pch
+display() {
+    int i;
+    if (front == - 1)
+        printf("Tidak ada komplain \n");
+    else {
+        printf("Daftar Komplain : \n");
+        for (i = front; i <= rear; i++){
+            printf("%s => %s \n", queue_name[i],queue_complain[i]);
+    	}
+    }
+}
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+int isempty() {
+   if(top == -1)
+      return 1;
+   else
+      return 0;
+}
+   
+int isfull() {
+   if(top == MAXSTACK)
+      return 1;
+   else
+      return 0;
+}
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+addingStack(){
+	char data[100];
+    if(isfull()) {
+		printf("Tumpukan barang di gudang sudah penuh \n");
+    } else {
+        printf("Masukkan Barcode : ");
+        scanf(" %[^\t\n]s",&data);
+    	top = top + 1;
+        strcpy(stack[top],data);
+        return 0;
+    }
+}
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+viewStack(){
+	int i;
+	printf("Barang dalam gudang : \n");
+	for (i = top; i >= 0; i--){
+        printf("%s \n", stack[i]);
+	}
+}
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+popStack(){
+   char data[100];
+	
+   if(!isempty()) {
+      strcpy(data,stack[top]);
+      top = top - 1;   
+      printf("Barang dalam gudang : %s \n",data);
+   } else {
+      printf("Tumpukan barang di gudang sudah kosong.\n");
+   }	
+}
